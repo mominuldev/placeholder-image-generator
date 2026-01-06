@@ -156,7 +156,11 @@ function App() {
     if (image.placeholderUrl) {
       const link = document.createElement('a')
       link.href = image.placeholderUrl
-      link.download = `placeholder-${image.dimensions.width}x${image.dimensions.height}.png`
+
+      // Get original filename without extension
+      const originalName = image.file.name.replace(/\.[^/.]+$/, '')
+      link.download = `${originalName}.png`
+
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
@@ -174,9 +178,11 @@ function App() {
     try {
       const zip = new JSZip()
 
-      completedImages.forEach((image, index) => {
+      completedImages.forEach((image) => {
         const base64Data = image.placeholderUrl.split(',')[1]
-        const fileName = `placeholder-${image.dimensions.width}x${image.dimensions.height}-${index + 1}.png`
+        // Get original filename without extension
+        const originalName = image.file.name.replace(/\.[^/.]+$/, '')
+        const fileName = `${originalName}.png`
         zip.file(fileName, base64Data, { base64: true })
       })
 
